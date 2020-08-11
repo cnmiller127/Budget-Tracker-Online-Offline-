@@ -5,9 +5,6 @@ var dataRes;
 
 getIndexedDBdata();
 
-
-
-
 fetch("/api/transaction")
   .then(response => {
     return response.json();
@@ -257,7 +254,19 @@ function transferIndexed(data){
     }
   })
   .then(response => {
-    clearIndexedDB(); // clear indexed DB to minimize unnecessary storage    
+    clearIndexedDB(); // clear indexed DB to minimize unnecessary storage 
+    fetch("/api/transaction")
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    // save db data on global variable
+    transactions = data;
+
+    populateTotal();
+    populateTable();
+    populateChart();
+  });   
     return response.json();
   }).catch(err => {
     // fetch failed, so do nothing
