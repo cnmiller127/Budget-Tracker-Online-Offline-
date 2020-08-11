@@ -5,7 +5,7 @@ const compression = require("compression");
 const path = require("path");
 
 
-var PORT = 3011 || process.env.PORT;
+var PORT = process.env.PORT;
 
 const app = express();
 
