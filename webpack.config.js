@@ -1,7 +1,7 @@
 // Temlate
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 const path = require("path");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 
 const config = {
   entry: "./public/index.js",
@@ -22,8 +22,7 @@ const config = {
       }
     }]
   },
-  plugins: [new BundleAnalyzerPlugin(),
-    new WebpackPwaManifest({
+  plugins: [new WebpackPwaManifest({
       // the name of the generated manifest file
       filename: "manifest.json",
 
