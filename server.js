@@ -17,9 +17,9 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-// app.get("/", function(req, res) {
-//   res.sendFile(path.join(__dirname, "/public/index.html"));
-// });
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://cnmiller127:superBase93!@ds055525.mlab.com:55525/heroku_rsb12l8c", {useNewUrlParser: true});
 
