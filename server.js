@@ -2,6 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const compression = require("compression");
+const path = require("path");
 
 
 var PORT = 3011 || process.env.PORT;
@@ -15,6 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static("public"));
+
+app.get("/", function(req, res) {
+  res.json(path.join(__dirname, "public/index.html"));
+});
 
 mongoose.connect(process.env.MONGODB_URI ||
   "mongodb://cnmiller127:superBase93!@ds055525.mlab.com:55525/heroku_rsb12l8c", {
