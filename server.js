@@ -16,7 +16,8 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://cnmiller127:superBase93!@ds137336.mlab.com:37336/heroku_dm49fk42", {
+mongoose.connect(process.env.MONGODB_URI ||
+  "mongodb://cnmiller127:superBase93!@ds055525.mlab.com:55525/heroku_rsb12l8c", {
   useNewUrlParser: true,
   useFindAndModify: false
 });
@@ -27,3 +28,4 @@ app.use(require("./routes/api.js"));
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}! http://localhost:3011`);
 });
+
