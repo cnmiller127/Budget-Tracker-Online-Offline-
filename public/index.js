@@ -1,5 +1,12 @@
+
 let transactions = [];
 let myChart;
+var dataRes;
+
+getIndexedDBdata();
+
+
+
 
 fetch("/api/transaction")
   .then(response => {
@@ -151,3 +158,148 @@ document.querySelector("#add-btn").onclick = function() {
 document.querySelector("#sub-btn").onclick = function() {
   sendTransaction(false);
 };
+
+
+function saveRecord(money){
+  
+
+  const openRequest = self.indexedDB.open("transactions", 1);
+  // Create the schema
+  openRequest.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      
+      const transactionsStore = db.createObjectStore("transactions", {keyPath: "_id", autoIncrement: true});
+      const nameIndex = transactionsStore.createIndex("name", "name");
+      const valueIndex = transactionsStore.createIndex("value", "value");
+      const dateIndex = transactionsStore.createIndex("date", "date");
+  };
+
+    openRequest.onerror = function(event) {
+        console.error(event);
+    };
+
+    openRequest.onsuccess = function (event) {
+        const db = openRequest.result;
+        const transaction = db.transaction(["transactions"], "readwrite");
+        const transactionsStore = transaction.objectStore("transactions");
+        const nameIndex = transactionsStore.index("name");
+        const valueIndex = transactionsStore.index("value");
+        const dateIndex = transactionsStore.index("date");
+        console.log('DB opened');
+        // Adds data to our objectStore
+        console.log(money);
+      transactionsStore.add({name: money.name, value: money.value, date: money.date});
+      
+
+      // Close the db when the transaction is done
+      transaction.oncomplete = function() {
+          db.close();
+      };
+  };
+}
+
+function getIndexedDBdata(){
+  
+  const openRequest = self.indexedDB.open("transactions", 1);
+  // Create the schema
+  openRequest.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      
+      const transactionsStore = db.createObjectStore("transactions", {keyPath: "_id", autoIncrement: true});
+      const nameIndex = transactionsStore.createIndex("name", "name");
+      const valueIndex = transactionsStore.createIndex("value", "value");
+      const dateIndex = transactionsStore.createIndex("date", "date");
+  };
+
+
+    openRequest.onsuccess = function (event) {
+        const db = openRequest.result;
+        const transaction = db.transaction(["transactions"], "readwrite");
+        const transactionsStore = transaction.objectStore("transactions");
+        const nameIndex = transactionsStore.index("name");
+        const valueIndex = transactionsStore.index("value");
+        const dateIndex = transactionsStore.index("date");
+        console.log('DB opened');
+        // Gets data from our objectStore
+        const getRequest = transactionsStore.getAll();
+        getRequest.onsuccess = () => {
+          console.log(getRequest.result);
+          if(getRequest.result){
+            transferIndexed(getRequest.result);
+            }
+          
+        };
+      
+      // Close the db when the transaction is done
+      transaction.oncomplete = function() {
+          db.close();
+      };
+  };
+  
+}
+
+function transferIndexed(data){
+  console.log(data);
+  data.forEach(index => {
+
+  
+  let transaction = {
+    name: index.name,
+    value: index.value,
+    date: new Date().toISOString()
+  };
+  fetch("/api/transaction", {
+    method: "POST",
+    body: JSON.stringify(transaction),
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json"
+    }
+  })
+  .then(response => {
+    clearIndexedDB(); // clear indexed DB to minimize unnecessary storage    
+    return response.json();
+  }).catch(err => {
+    // fetch failed, so do nothing
+    return;
+  });
+ 
+  })
+}
+
+function clearIndexedDB(){
+  const openRequest = self.indexedDB.open("transactions", 1);
+  // Create the schema
+  openRequest.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      
+      const transactionsStore = db.createObjectStore("transactions", {keyPath: "_id", autoIncrement: true});
+      const nameIndex = transactionsStore.createIndex("name", "name");
+      const valueIndex = transactionsStore.createIndex("value", "value");
+      const dateIndex = transactionsStore.createIndex("date", "date");
+  };
+
+
+    openRequest.onsuccess = function (event) {
+        const db = openRequest.result;
+        const transaction = db.transaction(["transactions"], "readwrite");
+        const transactionsStore = transaction.objectStore("transactions");
+        const nameIndex = transactionsStore.index("name");
+        const valueIndex = transactionsStore.index("value");
+        const dateIndex = transactionsStore.index("date");
+        console.log('DB opened');
+        // Gets data from our objectStore
+        const request = transactionsStore.clear();
+        request.onsuccess = () => {
+          console.log(request.result);  
+        };
+      
+      
+
+      // Close the db when the transaction is done
+      transaction.oncomplete = function() {
+          db.close();
+      }
+
+  }
+}
