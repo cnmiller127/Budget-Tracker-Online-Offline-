@@ -226,8 +226,6 @@ function getIndexedDBdata(){
           console.log(getRequest.result);
           if(getRequest.result){
             transferIndexed(getRequest.result);
-            location.reload();
-            console.log("reload");
             }
           
         };
@@ -292,13 +290,11 @@ function clearIndexedDB(){
         console.log('DB opened');
         // Gets data from our objectStore
         const request = transactionsStore.clear();
-        request.onsuccess = () => {
-          console.log(request.result);  
-        };
       
       // Close the db when the transaction is done
       transaction.oncomplete = function() {
           db.close();
+          location.reload();
       }
 
   }
