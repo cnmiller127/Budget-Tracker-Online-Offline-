@@ -226,6 +226,8 @@ function getIndexedDBdata(){
           console.log(getRequest.result);
           if(getRequest.result){
             transferIndexed(getRequest.result);
+            location.reload();
+            console.log("reload");
             }
           
         };
@@ -259,9 +261,6 @@ function transferIndexed(data){
   .then(response => {
     clearIndexedDB(); // clear indexed DB to minimize unnecessary storage 
     return response.json();
-  }).then(res => {
-    console.log("reload here");
-    location.reload();
   }).catch(err => {
     // fetch failed, so do nothing
     return;
