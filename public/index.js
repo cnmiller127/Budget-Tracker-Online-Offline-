@@ -258,8 +258,10 @@ function transferIndexed(data){
   })
   .then(response => {
     clearIndexedDB(); // clear indexed DB to minimize unnecessary storage 
-    displayData();
     return response.json();
+  }).then(res => {
+    console.log("reload here");
+    location.reload();
   }).catch(err => {
     // fetch failed, so do nothing
     return;
