@@ -4,7 +4,9 @@ let myChart;
 var dataRes;
 
 getIndexedDBdata();
+displayData();
 
+function displayData(){
 fetch("/api/transaction")
   .then(response => {
     return response.json();
@@ -17,6 +19,7 @@ fetch("/api/transaction")
     populateTable();
     populateChart();
   });
+}
 
 function populateTotal() {
   // reduce transaction amounts to a single total value
@@ -255,18 +258,7 @@ function transferIndexed(data){
   })
   .then(response => {
     clearIndexedDB(); // clear indexed DB to minimize unnecessary storage 
-    fetch("/api/transaction")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    // save db data on global variable
-    transactions = data;
-
-    populateTotal();
-    populateTable();
-    populateChart();
-  });   
+    displayData();
     return response.json();
   }).catch(err => {
     // fetch failed, so do nothing
@@ -303,8 +295,6 @@ function clearIndexedDB(){
           console.log(request.result);  
         };
       
-      
-
       // Close the db when the transaction is done
       transaction.oncomplete = function() {
           db.close();
