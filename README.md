@@ -14,6 +14,6 @@ This application utilizes Express.js, Node.js, MongoDB, service workers, and cac
 [Click Here](https://budget-tracker-cnm-2020.herokuapp.com/) to view deployed application. 
 
 ## Screenshot
-[!](ss.PNG)
+![](/ss.PNG)
 
 
